@@ -426,8 +426,9 @@ contract FlokiBeans is IBEP20, Auth {
     mapping (address => bool) isTxLimitExempt;
     mapping (address => bool) isDividendExempt;
 
-    uint256 liquidityFee = 500;
+    uint256 liquidityFee = 300;
     uint256 buybackFee = 100;
+    uint256 mciFee = 200;
     uint256 reflectionFee = 500;
     uint256 marketingFee = 400;
     uint256 totalFee = 1500;
@@ -435,6 +436,7 @@ contract FlokiBeans is IBEP20, Auth {
 
     address public autoLiquidityReceiver;
     address public marketingFeeReceiver;
+    address public mciFeeReceiver;
 
     uint256 targetLiquidity = 25;
     uint256 targetLiquidityDenominator = 100;
@@ -487,6 +489,7 @@ contract FlokiBeans is IBEP20, Auth {
 
         autoLiquidityReceiver = msg.sender;
         marketingFeeReceiver = msg.sender;
+        mciFeeReceiver = msg.sender;
 
         approve(_dexRouter, _totalSupply);
         approve(address(pair), _totalSupply);
@@ -627,10 +630,12 @@ contract FlokiBeans is IBEP20, Auth {
         uint256 amountBNBLiquidity = amountBNB.mul(dynamicLiquidityFee).div(totalBNBFee).div(2);
         uint256 amountBNBReflection = amountBNB.mul(reflectionFee).div(totalBNBFee);
         uint256 amountBNBMarketing = amountBNB.mul(marketingFee).div(totalBNBFee);
+        uint256 amountBNBMcif = amountBNB.mul(mciFee).div(totalBNBFee);
+
 
         try distributor.deposit{value: amountBNBReflection}() {} catch {}
         payable(marketingFeeReceiver).transfer(amountBNBMarketing);
-            
+        payable(mciFeeReceiver).transfer(amountBNBMcif);
         
 
         if(amountToLiquify > 0){
@@ -735,19 +740,21 @@ contract FlokiBeans is IBEP20, Auth {
         isTxLimitExempt[holder] = exempt;
     }
 
-    function setFees(uint256 _liquidityFee, uint256 _buybackFee, uint256 _reflectionFee, uint256 _marketingFee, uint256 _feeDenominator) external authorized {
+    function setFees(uint256 _liquidityFee, uint256 _buybackFee, uint256 _reflectionFee, uint256 _marketingFee, uint256 _mciFee, uint256 _feeDenominator) external authorized {
         liquidityFee = _liquidityFee;
         buybackFee = _buybackFee;
         reflectionFee = _reflectionFee;
         marketingFee = _marketingFee;
-        totalFee = _liquidityFee.add(_buybackFee).add(_reflectionFee).add(_marketingFee);
+        mciFee = _mciFee;
+        totalFee = _liquidityFee.add(_buybackFee).add(_reflectionFee).add(_marketingFee).add(_mciFee);
         feeDenominator = _feeDenominator;
         require(totalFee < feeDenominator/4);
     }
 
-    function setFeeReceivers(address _autoLiquidityReceiver, address _marketingFeeReceiver) external authorized {
+    function setFeeReceivers(address _autoLiquidityReceiver, address _marketingFeeReceiver, address _mciFeeReceiver) external authorized {
         autoLiquidityReceiver = _autoLiquidityReceiver;
         marketingFeeReceiver = _marketingFeeReceiver;
+        mciFeeReceiver = _mciFeeReceiver;
     }
 
     function setSwapBackSettings(bool _enabled, uint256 _amount) external authorized {
