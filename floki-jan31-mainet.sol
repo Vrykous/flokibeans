@@ -357,7 +357,7 @@ contract DividendDistributor is IDividendDistributor {
     }
 }
 
-contract Main50 is IBEP20, Auth {
+contract FlokiBeans is IBEP20, Auth {
     using SafeMath for uint256;
 
     address BNB = 0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c;
@@ -365,8 +365,8 @@ contract Main50 is IBEP20, Auth {
     address DEAD = 0x000000000000000000000000000000000000dEaD;
     address ZERO = 0x0000000000000000000000000000000000000000;
 
-    string constant _name = "Main 50";
-    string constant _symbol = "m50";
+    string constant _name = "FLOKI BEANS";
+    string constant _symbol = "$BEANS";
     uint8 constant _decimals = 9;
 
     uint256 _totalSupply = 1000000000000000 * (10 ** _decimals);
