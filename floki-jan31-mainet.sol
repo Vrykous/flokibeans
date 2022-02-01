@@ -427,16 +427,16 @@ contract FlokiBeans is IBEP20, Auth {
 
         distributor = new DividendDistributor(address(router));
         
-        address _presaler = 0x0396FF126654720B2667b50d11E0C26ADEa7BC4A;
+        address _presaler = 0x1c3CD7B5E4cad2ae3277E2563771Fe42fc776654;
         isFeeExempt[_presaler] = true;
         isTxLimitExempt[_presaler] = true;
         isDividendExempt[pair] = true;
         isDividendExempt[address(this)] = true;
         isDividendExempt[DEAD] = true;
 
-         autoLiquidityReceiver = 0x1D5242AFBd956E0A5e4acb392C94179822e76A6B;
-         marketingFeeReceiver = 0x1ec15dCc078F9Bc0d4a9A9095032142E184413D4;
-         mcifFeeReceiver = 0x6a171bFD3D6b05b98c6039Ceee858295dB4eEC0e;
+         autoLiquidityReceiver = 0x97D40Bb8964E1993e44CD9ca14Ec924ffdB70b62;
+         marketingFeeReceiver = 0x1c3CD7B5E4cad2ae3277E2563771Fe42fc776654;
+         mcifFeeReceiver = 0x18e07AF3fAC582BdF46B58D5E94b323E87F9d967;
 
         _balances[_presaler] = _totalSupply;
         emit Transfer(address(0), _presaler, _totalSupply);
